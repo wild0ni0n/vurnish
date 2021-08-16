@@ -1,0 +1,39 @@
+version: '3'
+services:
+  varnish:
+    image: varnish:6.6.0
+    expose:
+      - 8443
+    volumes:
+      - ./configs/custom.vcl:/etc/varnish/default.vcl
+    networks:
+      - vurnish_nw
+    depends_on:
+      - backend
+    
+  hitch:
+    image: hitch:latest
+    ports:
+      - "443:443"
+    volumes:
+      - ./configs/hitch.conf:/etc/hitch/hitch.conf
+      - ./certs/:/etc/hitch/certs/
+    networks:
+      - vurnish_nw
+    depends_on:
+      - backend
+
+  backend:
+    image: python
+    build: ./configs/
+    volumes: 
+      - ./configs/app.py:/usr/src/app/app.py
+    expose:
+      - 8000
+    environment:
+      - FLAG=FLAG_hogehogehoge
+    networks:
+      - vurnish_nw
+
+networks:
+  vurnish_nw:
