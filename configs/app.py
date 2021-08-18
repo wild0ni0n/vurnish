@@ -9,6 +9,7 @@ def main():
 
 @app.route('/debug', methods=['GET', 'POST'])
 def debug():
+    request.environ['wsgi.input_terminated'] = True
     headers = {}
     for header in request.headers:
         headers[header[0]] = header[1]

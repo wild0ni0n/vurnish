@@ -5,4 +5,4 @@ WORKDIR /usr/src/app
 ADD requirements.txt /usr/src/app
 RUN pip install -r requirements.txt
 ADD app.py /usr/src/app/
-CMD ["python", "app.py"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8000", "--keep-alive", "10", "-k", "gevent", "-w", "4"]
